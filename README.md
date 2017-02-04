@@ -1,6 +1,6 @@
 # StickyBoard
 
-Demo hosted at: http://162.243.131.210:49160
+Demo hosted at: http://sticky.world
 
 ## Installation:
 - To set up: npm install

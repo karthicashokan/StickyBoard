@@ -23,9 +23,15 @@ if(localStorage.getItem('return') != null)
 }
 else
 {
-	localStorage.setItem('return', "True");
-	localStorage.setItem('id_counter', 0);
-	localStorage.setItem('notes', null);
+  //Check for private browsing:
+  try {
+    localStorage.setItem('return', "True");
+    localStorage.setItem('id_counter', 0);
+    localStorage.setItem('notes', null);
+  }
+  catch(err) {
+      alert("Sorry, our site currently doesn't support Private Browsing.");
+  }
 }
 
 
@@ -72,43 +78,43 @@ export default class Sticky extends React.Component {
         case "color4":
         thisNoteColor =  "#f7d1cf"; //red
         break;
-    }
+      }
 
-    var x = Math.round(Math.random() * 800);
-    var y = Math.round(Math.random() * 800);
-    var content = DEFAULT_CONTENT;
-    var title = DEFAULT_TITLE;
+      var x = Math.round(Math.random() * 800);
+      var y = Math.round(Math.random() * 800);
+      var content = DEFAULT_CONTENT;
+      var title = DEFAULT_TITLE;
 
-    this.state.notes.push(<Note changeText={this.changeText.bind(this)} updateNotePosition={this.updateNotePosition.bind(this)} closeNote={this.closeNote.bind(this)} x={x} y={y} id={i} color={thisNoteColor} title={title} content={content} key={i} />);
-    this.setState({
-    	numNotes: _id_counter + 1
-    });
+      this.state.notes.push(<Note changeText={this.changeText.bind(this)} updateNotePosition={this.updateNotePosition.bind(this)} closeNote={this.closeNote.bind(this)} x={x} y={y} id={i} color={thisNoteColor} title={title} content={content} key={i} />);
+      this.setState({
+       numNotes: _id_counter + 1
+     });
 
     //localStorage.setItem('notes', JSON.stringify(this.state_NoteArray_to_list()));
     this.sync_LocalStorage_and_State();
-}
+  }
 
-closeNote(event) {
+  closeNote(event) {
 
-	if (this.state.notes.length == 1)
-	{
-		this.closeAllNotes();
-	}
-	else {
-		this.setState({
-			notes: update(this.state.notes, {$splice: [[event.target.id -1, 1]]})
-		})
+   if (this.state.notes.length == 1)
+   {
+    this.closeAllNotes();
+  }
+  else {
+    this.setState({
+     notes: update(this.state.notes, {$splice: [[event.target.id -1, 1]]})
+   })
 
-		this.setState({
-			notes: update(this.state.notes, {$splice: [[event.target.id -1, 1]]}),
-			numNotes: this.state.numNotes - 1 }, function afterStateChange () {
+    this.setState({
+     notes: update(this.state.notes, {$splice: [[event.target.id -1, 1]]}),
+     numNotes: this.state.numNotes - 1 }, function afterStateChange () {
 				//console.log(this.state.notes)
 				_id_counter = _id_counter - 1;
 				localStorage.setItem('id_counter', _id_counter);
 				this.sync_LocalStorage_and_State();
   			//alert(_id_counter);
   		});  	
-	}
+  }
 }
 
 loadNotes() {
@@ -150,21 +156,21 @@ loadNotes() {
 }
 
 closeAllNotes(event) {
-      var r = confirm("This will clear all sticky notes. Are you sure?");
-      if (r == true) {
-      	this.setState({
-      		notes: [],
-      		numNotes: 0 }, function afterStateChange () {
+  var r = confirm("This will clear all sticky notes. Are you sure?");
+  if (r == true) {
+   this.setState({
+    notes: [],
+    numNotes: 0 }, function afterStateChange () {
 
-      			_id_counter = 0;
-      			localStorage.setItem('id_counter', "0");
-				localStorage.setItem('notes', null);
-      		});  
-      }
-  }
+     _id_counter = 0;
+     localStorage.setItem('id_counter', "0");
+     localStorage.setItem('notes', null);
+   });  
+ }
+}
 
-  updateNotePosition(event) {
-  	
+updateNotePosition(event) {
+
   	//The values returned by element.getBoundingClientRect() are relative to the viewport.
   	var rect = event.target.getBoundingClientRect();
   	//console.log(rect.top, rect.left);
